@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Hexo</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="Hexo">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="ResNet网络Residual Network，残差网络 ​	ResNet 的核心思想是引入了残差连接，这允许网络跳过某些层的直接连接，将输入直接添加到网络的后续层输出。这样做的目的是让网络可以学习到残差函数（residual function），即输入与输出之间的差异，而不是直接学习映射关系。残差连接有助于减轻梯度消失的问题，并允许有效地训练非常深的网络。 ​	ResNet 中的基本模块是残差">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/05/20/ResNet%E7%BD%91%E7%BB%9C/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="ResNet网络Residual Network，残差网络 ​	ResNet 的核心思想是引入了残差连接，这允许网络跳过某些层的直接连接，将输入直接添加到网络的后续层输出。这样做的目的是让网络可以学习到残差函数（residual function），即输入与输出之间的差异，而不是直接学习映射关系。残差连接有助于减轻梯度消失的问题，并允许有效地训练非常深的网络。 ​	ResNet 中的基本模块是残差">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240513114103271.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240513115207311.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240513115635901.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240513115810832.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240515122934153.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240515123054363.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240515123157067.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240515123241610.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240515123307616.png">
+<meta property="article:published_time" content="2024-05-20T09:45:27.415Z">
+<meta property="article:modified_time" content="2024-05-15T07:01:15.500Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240513114103271.png">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>John Doe</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="rss"
+               href="/atom.xml"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-rss"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="github"
+               href="https://github.com/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="facebook"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-facebook"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+    
+        
+            <a title="instagram"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-instagram"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="reddit"
+               href="https://www.reddit.com/user/yelog/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-reddit"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="weibo"
+               href="http://weibo.com/u/2307534817"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-weibo"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="jianshu"
+               href="https://www.jianshu.com/u/ff56736de7cf"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-jianshu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="zhihu"
+               href="https://www.zhihu.com/people/jaytp/activities"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-zhihu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="oschina"
+               href="https://my.oschina.net/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-oschina"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="email"
+               href="mailto:jaytp@qq.com"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=872336115&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="kugou"
+               href="https://www.kugou.com/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-kugou"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="neteasemusic"
+               href="https://music.163.com/#/user/home?id=88151013"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-neteasemusic"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="全部文章">全部文章
+            
+                <small>(3)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                
+    <li>
+        <div data-rel="深度学习">
+            
+            深度学习
+            <small>(1)</small>
+        </div>
+        
+    </li>
+
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+            
+    </div>
+    <div>
+        
+            <a class="about  hasFriend  site_url"
+               
+               href="/about">关于</a>
+        
+        <a style="width: 50%"
+                
+                                           class="friends">友链</a>
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="3">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
+            <div class="right-title">全部文章</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>调制识别</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>resnet</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>RML2016.10a</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        
+        <a  class="全部文章 "
+           href="/2024/05/20/ResNet%E7%BD%91%E7%BB%9C/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title=""></span>
+            <span class="post-date" title="2024-05-20 17:45:27">2024/05/20</span>
+        </a>
+        
+        
+        <a  class="全部文章 "
+           href="/2024/05/20/hello-world/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2024-05-20 15:46:04">2024/05/20</span>
+        </a>
+        
+        
+        <a  class="全部文章 深度学习 "
+           href="/2024/05/19/ResNet%20%E9%80%9A%E4%BF%A1%E4%BF%A1%E5%8F%B7%E8%AF%86%E5%88%AB/"
+           data-tag="resnet,调制识别,RML2016.10a"
+           data-author="" >
+            <span class="post-title" title="ResNet 信号调制识别">ResNet 信号调制识别</span>
+            <span class="post-date" title="2024-05-19 19:07:40">2024/05/19</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏 快捷键 s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-ResNet网络" class="article article-type-post" itemscope itemprop="blogPost">
+    
+    <div class="article-meta">
+        
+        
+        
+        
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2024-05-15 15:01:15'>2024-05-20 17:45</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ResNet%E7%BD%91%E7%BB%9C"><span class="toc-text">ResNet网络</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#f-x-x-g-x"><span class="toc-text">f(x) &#x3D; x + g(x)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E-ResNet-%E7%9A%84%E8%B0%83%E5%88%B6%E6%96%B9%E5%BC%8F%E8%AF%86%E5%88%AB"><span class="toc-text">基于 ResNet 的调制方式识别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%EF%BC%9A"><span class="toc-text">脚本代码实现：</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="ResNet网络"><a href="#ResNet网络" class="headerlink" title="ResNet网络"></a>ResNet网络</h1><p><strong>Residual Network，残差网络</strong></p>
+<p>​	ResNet 的核心思想是引入了<strong>残差连接</strong>，这允许网络跳过某些层的直接连接，将输入直接添加到网络的后续层输出。这样做的目的是让网络可以<strong>学习到残差函数</strong>（residual function），即输入与输出之间的差异，而不是直接学习映射关系。残差连接有助于<strong>减轻梯度消失</strong>的问题，并允许有效地训练非常深的网络。</p>
+<p>​	ResNet 中的基本模块是残差块，它由<strong>两个卷积层和一个跳跃连接</strong>组成。残差块通过残差连接将输入添加到输出中，允许梯度直接通过跳跃连接进行<strong>反向传播</strong>，从而有效地解决了梯度消失的问题。常见的残差块包括基本的残差块和瓶颈残差块。</p>
+<p><img src="C:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240513114103271.png" alt="image-20240513114103271"></p>
+<blockquote>
+<h2 id="f-x-x-g-x"><a href="#f-x-x-g-x" class="headerlink" title="f(x) &#x3D; x + g(x)"></a><strong>f(x) &#x3D; x + g(x)</strong></h2></blockquote>
+<p>​	x表示输入，<strong>𝑔(𝑥)<strong>表示残差块的</strong>学习部分</strong>。这个公式的含义是将输入 𝑥 与学习到的残差 𝑔(𝑥) 相加，得到残差块的输出。让网络学习如何<strong>调整输入 𝑥</strong>，使得 𝑓(𝑥)接近于期望的输出。</p>
+<p>​	𝑔(𝑥) 是残差的学习部分，通过卷积层、批量归一化等操作，学习到输入 𝑥 与期望输出之间的<strong>差异</strong>。而 𝑥则表示输入的原始特征。将 𝑥与 𝑔(𝑥)相加可以认为是对 𝑥 进行一个”修正”。</p>
+<p>​	这样直接加保证了最优解“<strong>至少不会变差</strong>”，g(x)&#x3D;0是和以前一样的。假设没有学到任何东西，则g(x)为0</p>
+<p><img src="C:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240513115207311.png" alt="image-20240513115207311"></p>
+<p>​	在部分残差块中，为了<strong>减少特征图的维度</strong>，会采用将特征图高度和宽度减半的方式，通常通过步长为 2 的卷积操作(<strong>strides&#x3D;2</strong>)来实现。这会导致 g(x) 的高度和宽度减半。</p>
+<p>​	因此，为方便**x + g(x)**，在跳跃连接中加入一个卷积层（1x1 conv），设置strides&#x3D;2，也把x高宽减半了。</p>
+<p><img src="C:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240513115635901.png" alt="image-20240513115635901"></p>
+<p><img src="C:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240513115810832.png" alt="image-20240513115810832"></p>
+<h2 id="基于-ResNet-的调制方式识别"><a href="#基于-ResNet-的调制方式识别" class="headerlink" title="基于 ResNet 的调制方式识别"></a>基于 ResNet 的调制方式识别</h2><ol>
+<li><strong>数据集内容</strong>：<ul>
+<li>数据集包含数字调制信号和模拟调制信号。</li>
+<li>信号以 IQ（In-phase and Quadrature）数据格式存储，每个样本有 2 × 128 的形状。</li>
+<li>总共有 220,000 个样本（22万）。</li>
+</ul>
+</li>
+<li><strong>数据生成方式</strong>：<ul>
+<li>使用 Gnuradio 结合 Python 生成数据。</li>
+</ul>
+</li>
+<li><strong>调制方式</strong>：<ul>
+<li>包括 8 种数字调制方式：8PSK、BPSK、CPFSK、GFSK、PAM4、16QAM、64QAM、QPSK。</li>
+<li>还包括 3 种模拟调制方式：AM-DSB、AM-SSB、WBFM。</li>
+</ul>
+</li>
+<li><strong>信噪比范围</strong>：<ul>
+<li>信噪比范围为 -20dB 到 18dB，以 2dB 为间隔。</li>
+</ul>
+</li>
+<li><strong>采样率和频率偏移</strong>：<ul>
+<li>采样率为 200kHz。</li>
+<li>最大采样率偏移为 50Hz。</li>
+<li>最大载波频率偏移为 500Hz。</li>
+</ul>
+</li>
+<li><strong>频率选择性衰落</strong>：<ul>
+<li>使用了 8 个正弦波来模拟频率选择性衰落。</li>
+</ul>
+</li>
+<li><strong>噪声和信道环境</strong>：<ul>
+<li>信道环境包括加性高斯白噪声、选择性衰落（莱斯和瑞利）、中心频率偏移和采样率偏移。</li>
+</ul>
+</li>
+<li><strong>延迟设置</strong>：<ul>
+<li>有 3 个不同的延迟设置，分别为 [0.0, 0.9, 1.7]。</li>
+<li>对应每个延迟时间的幅度分别为 [1, 0.8, 0.3]。</li>
+</ul>
+</li>
+<li><strong>每个样本的形状</strong>：<ul>
+<li>每种调制方式，每种信噪比的数据形状为 (1000, 2, 128)。</li>
+<li>每个样本组数据形状为（1000个样本，每个样本有2个维度，每个维度有128个数据点）。</li>
+</ul>
+</li>
+<li><strong>数据集的特点</strong>：</li>
+</ol>
+<ul>
+<li><p>每个样本包含了不同调制方式在不同信噪比下的信号数据，这样的数据集可以用于训练和测试调制识别算法。</p>
+</li>
+<li><p>数据集提供了丰富的信道环境模拟，有助于研究数字信号在不同干扰条件下的性能表现。</p>
+<h2 id="脚本代码实现："><a href="#脚本代码实现：" class="headerlink" title="脚本代码实现："></a>脚本代码实现：</h2></li>
+</ul>
+<ol>
+<li><strong>数据预处理脚本</strong> (<code>data_preprocessing.py</code>)<ul>
+<li>用于加载、处理和分割数据，并保存数据集到文件中。</li>
+<li><strong>加载数据集：def load_data(dataset_path):</strong><br>从一个包含调制类型和信噪比的字典数据集中加载数据，并将其重塑为特定格式。返回的数据包含重塑后的数组 <code>X</code>、对应的标签 <code>lbl</code> 以及信噪比和调制类型的列表。这样做可以方便后续的机器学习模型进行训练和测试。</li>
+<li><strong>数据集分割：def split_data</strong>(X, lbl, test_size&#x3D;0.2, val_size&#x3D;0.1, random_state&#x3D;42):<br>通过两次调用 <code>train_test_split</code> 函数，将数据集按照指定比例分割成训练集、验证集和测试集。这样做的目的是为了在模型训练过程中，可以有一个独立的验证集来调整超参数，并且有一个独立的测试集来评估模型的最终性能。通过设置 <code>random_state</code> 参数，保证了数据分割的结果是可复现的。</li>
+<li><strong>保存测试集数据：def save_test_data</strong>(X_test, lbl_test, snrs, mods, test_data_path):<br>将测试集的数据和相关信息（标签、信噪比、调制类型）保存到一个指定的文件中。确保测试数据在需要时可以方便地加载和使用。使用 <code>pickle</code> 模块进行序列化，使得数据可以在保存和加载过程中保持其原始结构和类型。</li>
+<li><strong>主函数</strong>：<br>整合了数据处理的各个步骤，首先加载数据集，然后分割数据集，最后保存测试集数据。通过这种方式，可以确保数据处理的各个步骤按照预期的顺序执行。</li>
+</ul>
+</li>
+<li><strong>模型定义脚本</strong> (<code>model.py</code>)<ul>
+<li>定义模型结构和其他与模型相关的函数。</li>
+<li>定义了一个基于 ResNet34 架构的神经网络模型。在初始化过程中，加载了预训练的 ResNet34 模型，并修改了输入通道数和输出类别数。前向传播方法简单地将输入传递给内部的 ResNet34 模型，并返回输出结果。</li>
+</ul>
+</li>
+<li><strong>训练脚本</strong> (<code>train.py</code>)<ul>
+<li>加载数据、初始化模型、训练模型、保存模型权重以及保存测试数据集。</li>
+<li><strong>定义数据集类：ModulationDataset(data.Dataset):</strong><br>这个类定义了一个自定义的数据集类 <code>ModulationDataset</code>，用于加载调制数据集。通过实现 <code>__len__</code> 和 <code>__getitem__</code> 方法，使得该数据集可以被 PyTorch 的数据加载器使用。在 <code>__getitem__</code> 方法中，将特征数据、调制类型和信噪比组合成一个样本，并根据需要进行数据转换。这个类的设计符合 PyTorch 数据加载器的要求，使得可以方便地对数据进行批量处理和训练。</li>
+<li><strong>数据加载器 def get_dataloaders</strong>(X_train, lbl_train, X_val, lbl_val, X_test, lbl_test, mods, snrs, batch_size&#x3D;128):<br>这个函数根据输入的训练集、验证集和测试集的特征数据和标签数据，以及调制类型和信噪比列表，创建了相应的数据集对象和数据加载器。每个数据加载器都可以用于批量加载数据，并根据需要对数据进行随机打乱。这样设计使得数据在训练、验证和测试过程中可以方便地被加载和使用。</li>
+<li><strong>训练模型def train_model</strong>(model, train_loader, val_loader, criterion, optimizer, num_epochs&#x3D;20, device&#x3D;’cuda’, model_save_path&#x3D;’resnet34_model.pth’):<br>这个函数用于训练神经网络模型，并在训练过程中进行验证，选择最佳模型。通过循环遍历每个训练轮次，并在每个轮次内迭代训练和验证阶段，对模型进行训练和评估。在每个阶段内，都计算并打印损失和准确率，并保存训练过程中的最佳模型。最后返回训练完成的最佳模型。</li>
+<li><strong>主函数</strong>：<br>整个训练流程的主控制中心，负责加载数据、创建模型、设置损失函数和优化器，并调用训练函数进行模型训练。通过调用其他函数，实现了整个训练流程的自动化和模块化</li>
+</ul>
+</li>
+<li><strong>评估和可视化脚本</strong> (<code>evaluate_and_plot.py</code>)<ul>
+<li>加载模型和测试数据，进行模型评估，并生成各种可视化图表。</li>
+<li><strong>定义数据集类：ModulationDataset(data.Dataset):</strong><br>这个类定义了一个自定义的数据集类 <code>ModulationDataset</code>，用于加载调制数据集。通过实现 <code>__len__</code> 和 <code>__getitem__</code> 方法，使得该数据集可以被 PyTorch 的数据加载器使用。在 <code>__getitem__</code> 方法中，将特征数据、调制类型和信噪比组合成一个样本，并根据需要进行数据转换。这个类的设计符合 PyTorch 数据加载器的要求，使得可以方便地对数据进行批量处理和训练。</li>
+<li><strong>加载预先保存的测试集数据：def load_test_data</strong>(test_data_path):<br>加载预先保存的测试集数据，并返回加载的测试集特征数据、标签数据、信噪比列表和调制类型列表。通过使用 <code>pickle</code> 模块进行数据的序列化和反序列化，可以方便地在不同的脚本中保存和加载数据，使得测试数据可以在需要时被轻松地加载和使用。</li>
+<li><strong>评估模型：def evaluate_model</strong>(model, dataloader, device&#x3D;’cuda’):<br>用于评估模型在给定数据集上的性能，包括计算准确率以及保存所有预测、所有标签和所有信噪比。通过迭代数据加载器，将数据传递给模型进行推理，并统计模型的正确预测数，最后计算准确率并返回结果。</li>
+<li><strong>绘制结果图函数：</strong><br>绘制不同信噪比下的平均准确率折线图<br>绘制不同信噪比下的调制方式准确率折线图<br>绘制混淆矩阵</li>
+<li><strong>主函数</strong>：<br>实现了整个模型评估的流程，包括加载保存的模型、评估模型性能、计算平均准确率并绘制相应图像。通过这些步骤，可以全面地了解模型在测试集上的性能表现，并进行可视化分析，从而进一步优化和改进模型。</li>
+</ul>
+</li>
+</ol>
+<img src="C:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240515122934153.png" alt="image-20240515122934153" style="zoom: 50%;" />
+
+<img src="C:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240515123054363.png" alt="image-20240515123054363" style="zoom:50%;" />
+
+<img src="C:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240515123157067.png" alt="image-20240515123157067" style="zoom:50%;" />
+
+<img src="C:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240515123241610.png" alt="image-20240515123241610" style="zoom:50%;" />
+
+<p><img src="C:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240515123307616.png" alt="image-20240515123307616"></p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">赏</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2016-2020 Yelog
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>喜欢就点赞,疼爱就打赏</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

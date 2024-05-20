@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ResNet 信号调制识别 | Hexo</title>
+  <meta name="keywords" content=" resnet , 调制识别 , RML2016.10a ">
+  <meta name="description" content="ResNet 信号调制识别 | Hexo">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="ResNet网络Residual Network，残差网络 ​	ResNet 的核心思想是引入了残差连接，这允许网络跳过某些层的直接连接，将输入直接添加到网络的后续层输出。这样做的目的是让网络可以学习到残差函数（residual function），即输入与输出之间的差异，而不是直接学习映射关系。残差连接有助于减轻梯度消失的问题，并允许有效地训练非常深的网络。 ​	ResNet 中的基本模块是残差">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/05/20/ResNet%E7%BD%91%E7%BB%9C/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="ResNet网络Residual Network，残差网络 ​	ResNet 的核心思想是引入了残差连接，这允许网络跳过某些层的直接连接，将输入直接添加到网络的后续层输出。这样做的目的是让网络可以学习到残差函数（residual function），即输入与输出之间的差异，而不是直接学习映射关系。残差连接有助于减轻梯度消失的问题，并允许有效地训练非常深的网络。 ​	ResNet 中的基本模块是残差">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240513114103271.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240513115207311.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240513115635901.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240513115810832.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240515122934153.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240515123054363.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240515123157067.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240515123241610.png">
+<meta property="og:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240515123307616.png">
+<meta property="article:published_time" content="2024-05-20T09:45:27.415Z">
+<meta property="article:modified_time" content="2024-05-15T07:01:15.500Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:\Users\mymdy\AppData\Roaming\Typora\typora-user-images\image-20240513114103271.png">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>John Doe</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="rss"
+               href="/atom.xml"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-rss"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="github"
+               href="https://github.com/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="facebook"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-facebook"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+    
+        
+            <a title="instagram"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-instagram"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="reddit"
+               href="https://www.reddit.com/user/yelog/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-reddit"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="weibo"
+               href="http://weibo.com/u/2307534817"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-weibo"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="jianshu"
+               href="https://www.jianshu.com/u/ff56736de7cf"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-jianshu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="zhihu"
+               href="https://www.zhihu.com/people/jaytp/activities"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-zhihu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="oschina"
+               href="https://my.oschina.net/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-oschina"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="email"
+               href="mailto:jaytp@qq.com"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=872336115&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="kugou"
+               href="https://www.kugou.com/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-kugou"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="neteasemusic"
+               href="https://music.163.com/#/user/home?id=88151013"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-neteasemusic"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="全部文章">全部文章
+            
+                <small>(3)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                
+    <li>
+        <div data-rel="深度学习">
+            
+            深度学习
+            <small>(1)</small>
+        </div>
+        
+    </li>
+
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+            
+    </div>
+    <div>
+        
+            <a class="about  hasFriend  site_url"
+               
+               href="/about">关于</a>
+        
+        <a style="width: 50%"
+                
+                                           class="friends">友链</a>
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="3">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
+            <div class="right-title">全部文章</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>调制识别</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>resnet</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>RML2016.10a</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        
+        <a  class="全部文章 "
+           href="/2024/05/20/ResNet%E7%BD%91%E7%BB%9C/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title=""></span>
+            <span class="post-date" title="2024-05-20 17:45:27">2024/05/20</span>
+        </a>
+        
+        
+        <a  class="全部文章 "
+           href="/2024/05/20/hello-world/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2024-05-20 15:46:04">2024/05/20</span>
+        </a>
+        
+        
+        <a  class="全部文章 深度学习 "
+           href="/2024/05/19/ResNet%20%E9%80%9A%E4%BF%A1%E4%BF%A1%E5%8F%B7%E8%AF%86%E5%88%AB/"
+           data-tag="resnet,调制识别,RML2016.10a"
+           data-author="" >
+            <span class="post-title" title="ResNet 信号调制识别">ResNet 信号调制识别</span>
+            <span class="post-date" title="2024-05-19 19:07:40">2024/05/19</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏 快捷键 s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-ResNet 通信信号识别" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">ResNet 信号调制识别</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="深度学习">深度学习</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color2">resnet</a>
+            
+            <a class="color5">调制识别</a>
+            
+            <a class="color2">RML2016.10a</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2024-05-20 17:43:28'>2024-05-19 19:07</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ResNet-%E4%BF%A1%E5%8F%B7%E8%B0%83%E5%88%B6%E8%AF%86%E5%88%AB"><span class="toc-text">ResNet 信号调制识别</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="ResNet-信号调制识别"><a href="#ResNet-信号调制识别" class="headerlink" title="ResNet 信号调制识别"></a>ResNet 信号调制识别</h1><p>&lt;img src&#x3D;”&#x2F;img&#x2F;image-20240513193204914.png” style&#x3D;”zoom:50%;” &#x2F;</p>
+<p><img src="/../img/image-20240513193204914.png"></p>
+<p>数据集：RML2016.10a</p>
+<p><img src="/../img/image-20240513203107410.png"></p>
+<p><img src="/../img/image-20240513203123926.png"></p>
+<p><img src="/../img/image-20240513203151707.png"></p>
+<ol>
+<li><strong>数据预处理和加载</strong>：<ul>
+<li>将数据集分为训练集、验证集和测试集。</li>
+<li>使用DataLoader来加载数据。</li>
+</ul>
+</li>
+<li><strong>定义ResNet34模型</strong>：<ul>
+<li>使用PyTorch的预训练模型，并调整最后一层以适应11种调制方式。</li>
+</ul>
+</li>
+<li><strong>训练模型</strong>：<ul>
+<li>定义训练循环，包括损失函数和优化器。</li>
+<li>实现验证循环以评估模型在验证集上的表现。</li>
+</ul>
+</li>
+<li><strong>评估和可视化结果</strong>：<ul>
+<li>计算不同信噪比下的平均准确率并绘制折线图。</li>
+<li>计算不同信噪比下的调制方式准确率并绘制折线图。</li>
+<li>生成混淆矩阵以展示不同调制方式的分类效果。</li>
+</ul>
+</li>
+</ol>
+<pre><code class="highlight python"><span class="keyword">import</span> os
+<span class="keyword">import</span> pickle  <span class="comment"># 添加这行来导入pickle模块</span>
+<span class="keyword">import</span> time
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> torch
+<span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn
+<span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim
+<span class="keyword">import</span> torch.utils.data <span class="keyword">as</span> data
+<span class="keyword">import</span> torchvision.models <span class="keyword">as</span> models
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> confusion_matrix, ConfusionMatrixDisplay
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm
+<span class="keyword">import</span> copy  <span class="comment"># 添加这行来导入copy模块</span>
+
+<span class="comment"># 数据集路径</span>
+dataset_path = <span class="string">&#x27;RML2016.10a_dict.pkl&#x27;</span>
+model_save_path = <span class="string">&#x27;resnet34_model.pth&#x27;</span>
+
+<span class="comment"># 加载数据集</span>
+<span class="keyword">def</span> <span class="title function_">load_data</span>(<span class="params">dataset_path</span>):
+    <span class="keyword">with</span> <span class="built_in">open</span>(dataset_path, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:
+        Xd = pickle.load(f, encoding=<span class="string">&#x27;latin1&#x27;</span>)
+    snrs, mods = <span class="built_in">map</span>(<span class="keyword">lambda</span> j: <span class="built_in">sorted</span>(<span class="built_in">list</span>(<span class="built_in">set</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> x: x[j], Xd.keys())))), [<span class="number">1</span>, <span class="number">0</span>])
+    X = []
+    lbl = []
+    <span class="keyword">for</span> mod <span class="keyword">in</span> mods:
+        <span class="keyword">for</span> snr <span class="keyword">in</span> snrs:
+            X.append(Xd[(mod, snr)])
+            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(Xd[(mod, snr)].shape[<span class="number">0</span>]):
+                lbl.append((mod, snr))
+    X = np.vstack(X)
+    <span class="keyword">return</span> X, lbl, snrs, mods
+
+<span class="comment"># 数据集分割</span>
+<span class="keyword">def</span> <span class="title function_">split_data</span>(<span class="params">X, lbl, test_size=<span class="number">0.2</span>, val_size=<span class="number">0.1</span>, random_state=<span class="number">42</span></span>):
+    n_samples = <span class="built_in">len</span>(lbl)
+    n_test = <span class="built_in">int</span>(n_samples * test_size)
+    n_val = <span class="built_in">int</span>(n_samples * val_size)
+
+    X_train_val, X_test, lbl_train_val, lbl_test = train_test_split(X, lbl, test_size=n_test, random_state=random_state)
+    X_train, X_val, lbl_train, lbl_val = train_test_split(X_train_val, lbl_train_val, test_size=n_val, random_state=random_state)
+
+    <span class="keyword">return</span> (X_train, lbl_train), (X_val, lbl_val), (X_test, lbl_test)
+
+<span class="comment"># 定义数据集类</span>
+<span class="keyword">class</span> <span class="title class_">ModulationDataset</span>(data.Dataset):
+    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, X, lbl, mods, snrs, transform=<span class="literal">None</span></span>):
+        self.X = X
+        self.lbl = lbl
+        self.mods = mods
+        self.snrs = snrs
+        self.transform = transform
+
+    <span class="keyword">def</span> <span class="title function_">__len__</span>(<span class="params">self</span>):
+        <span class="keyword">return</span> <span class="built_in">len</span>(self.lbl)
+
+    <span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, idx</span>):
+        sample = self.X[idx]
+        sample = np.expand_dims(sample, axis=<span class="number">1</span>)  <span class="comment"># 增加一个维度</span>
+        label = self.mods.index(self.lbl[idx][<span class="number">0</span>])
+        snr = self.snrs.index(self.lbl[idx][<span class="number">1</span>])
+        <span class="keyword">if</span> self.transform:
+            sample = self.transform(sample)
+        <span class="keyword">return</span> sample, label, snr
+
+<span class="comment"># 数据加载器</span>
+<span class="keyword">def</span> <span class="title function_">get_dataloaders</span>(<span class="params">X_train, lbl_train, X_val, lbl_val, X_test, lbl_test, mods, snrs, batch_size=<span class="number">128</span></span>):
+    train_dataset = ModulationDataset(X_train, lbl_train, mods, snrs, transform=torch.tensor)
+    val_dataset = ModulationDataset(X_val, lbl_val, mods, snrs, transform=torch.tensor)
+    test_dataset = ModulationDataset(X_test, lbl_test, mods, snrs, transform=torch.tensor)
+
+    train_loader = data.DataLoader(train_dataset, batch_size=batch_size, shuffle=<span class="literal">True</span>)
+    val_loader = data.DataLoader(val_dataset, batch_size=batch_size, shuffle=<span class="literal">False</span>)
+    test_loader = data.DataLoader(test_dataset, batch_size=batch_size, shuffle=<span class="literal">False</span>)
+
+    <span class="keyword">return</span> train_loader, val_loader, test_loader
+
+<span class="comment"># 定义ResNet34模型</span>
+<span class="keyword">class</span> <span class="title class_">ResNet34</span>(nn.Module):
+    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, num_classes=<span class="number">11</span></span>):
+        <span class="built_in">super</span>(ResNet34, self).__init__()
+        self.model = models.resnet34(pretrained=<span class="literal">True</span>)
+        self.model.conv1 = nn.Conv2d(<span class="number">2</span>, <span class="number">64</span>, kernel_size=<span class="number">7</span>, stride=<span class="number">2</span>, padding=<span class="number">3</span>, bias=<span class="literal">False</span>)
+        self.model.fc = nn.Linear(<span class="number">512</span>, num_classes)
+
+    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):
+        <span class="keyword">return</span> self.model(x)
+
+<span class="comment"># 训练模型</span>
+<span class="keyword">def</span> <span class="title function_">train_model</span>(<span class="params">model, train_loader, val_loader, criterion, optimizer, num_epochs=<span class="number">10</span>, device=<span class="string">&#x27;cuda&#x27;</span>, model_save_path=<span class="string">&#x27;resnet34_model.pth&#x27;</span></span>):
+    best_model_wts = copy.deepcopy(model.state_dict())
+    best_acc = <span class="number">0.0</span>
+
+    <span class="built_in">print</span>(<span class="string">f&#x27;Training on <span class="subst">&#123;device&#125;</span>&#x27;</span>)
+
+    <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):
+        <span class="built_in">print</span>(<span class="string">f&#x27;Epoch <span class="subst">&#123;epoch&#125;</span>/<span class="subst">&#123;num_epochs - <span class="number">1</span>&#125;</span>&#x27;</span>)
+        <span class="built_in">print</span>(<span class="string">&#x27;-&#x27;</span> * <span class="number">10</span>)
+
+        epoch_start = time.time()
+
+        <span class="keyword">for</span> phase <span class="keyword">in</span> [<span class="string">&#x27;train&#x27;</span>, <span class="string">&#x27;val&#x27;</span>]:
+            <span class="keyword">if</span> phase == <span class="string">&#x27;train&#x27;</span>:
+                model.train()
+                dataloader = train_loader
+            <span class="keyword">else</span>:
+                model.<span class="built_in">eval</span>()
+                dataloader = val_loader
+
+            running_loss = <span class="number">0.0</span>
+            running_corrects = <span class="number">0</span>
+
+            <span class="keyword">for</span> inputs, labels, _ <span class="keyword">in</span> tqdm(dataloader):
+                inputs = inputs.to(device).<span class="built_in">float</span>()
+                labels = labels.to(device)
+
+                optimizer.zero_grad()
+
+                <span class="keyword">with</span> torch.set_grad_enabled(phase == <span class="string">&#x27;train&#x27;</span>):
+                    outputs = model(inputs)
+                    _, preds = torch.<span class="built_in">max</span>(outputs, <span class="number">1</span>)
+                    loss = criterion(outputs, labels)
+
+                    <span class="keyword">if</span> phase == <span class="string">&#x27;train&#x27;</span>:
+                        loss.backward()
+                        optimizer.step()
+
+                running_loss += loss.item() * inputs.size(<span class="number">0</span>)
+                running_corrects += torch.<span class="built_in">sum</span>(preds == labels.data)
+
+            epoch_loss = running_loss / <span class="built_in">len</span>(dataloader.dataset)
+            epoch_acc = running_corrects.double() / <span class="built_in">len</span>(dataloader.dataset)
+
+            <span class="built_in">print</span>(<span class="string">f&#x27;<span class="subst">&#123;phase&#125;</span> Loss: <span class="subst">&#123;epoch_loss:<span class="number">.4</span>f&#125;</span> Acc: <span class="subst">&#123;epoch_acc:<span class="number">.4</span>f&#125;</span>&#x27;</span>)
+
+            <span class="keyword">if</span> phase == <span class="string">&#x27;val&#x27;</span> <span class="keyword">and</span> epoch_acc &gt; best_acc:
+                best_acc = epoch_acc
+                best_model_wts = copy.deepcopy(model.state_dict())
+
+        epoch_time = time.time() - epoch_start
+        <span class="built_in">print</span>(<span class="string">f&#x27;Time for epoch <span class="subst">&#123;epoch&#125;</span>: <span class="subst">&#123;epoch_time:<span class="number">.2</span>f&#125;</span> seconds&#x27;</span>)
+
+        torch.save(model.state_dict(), model_save_path)
+
+    <span class="built_in">print</span>(<span class="string">f&#x27;Best val Acc: <span class="subst">&#123;best_acc:4f&#125;</span>&#x27;</span>)
+    model.load_state_dict(best_model_wts)
+    <span class="keyword">return</span> model
+
+<span class="comment"># 评估模型</span>
+<span class="keyword">def</span> <span class="title function_">evaluate_model</span>(<span class="params">model, dataloader, device=<span class="string">&#x27;cuda&#x27;</span></span>):
+    model.<span class="built_in">eval</span>()
+    running_corrects = <span class="number">0</span>
+
+    all_preds = []
+    all_labels = []
+    all_snrs = []
+
+    <span class="built_in">print</span>(<span class="string">f&#x27;Evaluating on <span class="subst">&#123;device&#125;</span>&#x27;</span>)
+
+    <span class="keyword">for</span> inputs, labels, snrs <span class="keyword">in</span> tqdm(dataloader):
+        inputs = inputs.to(device).<span class="built_in">float</span>()
+        labels = labels.to(device)
+
+        <span class="keyword">with</span> torch.set_grad_enabled(<span class="literal">False</span>):
+            outputs = model(inputs)
+            _, preds = torch.<span class="built_in">max</span>(outputs, <span class="number">1</span>)
+
+        running_corrects += torch.<span class="built_in">sum</span>(preds == labels.data)
+        all_preds.extend(preds.cpu().numpy())
+        all_labels.extend(labels.cpu().numpy())
+        all_snrs.extend(snrs.numpy())
+
+    acc = running_corrects.double() / <span class="built_in">len</span>(dataloader.dataset)
+    <span class="keyword">return</span> acc, all_preds, all_labels, all_snrs
+
+<span class="comment"># 绘制不同信噪比下的平均准确率折线图</span>
+<span class="keyword">def</span> <span class="title function_">plot_avg_accuracy</span>(<span class="params">snrs, accuracies</span>):
+    plt.figure()
+    plt.plot(snrs, accuracies)
+    plt.xlabel(<span class="string">&#x27;SNR (dB)&#x27;</span>)
+    plt.ylabel(<span class="string">&#x27;Accuracy&#x27;</span>)
+    plt.title(<span class="string">&#x27;Average Accuracy vs SNR&#x27;</span>)
+    plt.grid(<span class="literal">True</span>)
+    plt.show()
+
+<span class="comment"># 绘制不同信噪比下的调制方式准确率折线图</span>
+<span class="keyword">def</span> <span class="title function_">plot_mod_accuracy</span>(<span class="params">snrs, mod_accuracies, mods</span>):
+    <span class="keyword">for</span> i, mod <span class="keyword">in</span> <span class="built_in">enumerate</span>(mods):
+        plt.plot(snrs, mod_accuracies[i], label=mod)
+    plt.xlabel(<span class="string">&#x27;SNR (dB)&#x27;</span>)
+    plt.ylabel(<span class="string">&#x27;Accuracy&#x27;</span>)
+    plt.title(<span class="string">&#x27;Modulation Accuracy vs SNR&#x27;</span>)
+    plt.legend()
+    plt.grid(<span class="literal">True</span>)
+    plt.show()
+
+<span class="comment"># 绘制混淆矩阵</span>
+<span class="keyword">def</span> <span class="title function_">plot_confusion_matrix</span>(<span class="params">y_true, y_pred, mods</span>):
+    cm = confusion_matrix(y_true, y_pred)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=mods)
+    disp.plot(cmap=plt.cm.Blues)
+    plt.show()
+
+<span class="comment"># 主函数</span>
+<span class="keyword">def</span> <span class="title function_">main</span>():
+    device = torch.device(<span class="string">&#x27;cuda&#x27;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&#x27;cpu&#x27;</span>)
+
+    X, lbl, snrs, mods = load_data(dataset_path)
+    
+    (X_train, lbl_train), (X_val, lbl_val), (X_test, lbl_test) = split_data(X, lbl)
+
+    train_loader, val_loader, test_loader = get_dataloaders(X_train, lbl_train, X_val, lbl_val, X_test, lbl_test, mods, snrs)
+
+    model = ResNet34(num_classes=<span class="built_in">len</span>(mods)).to(device)
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(model.parameters(), lr=<span class="number">0.001</span>)
+
+    <span class="keyword">if</span> os.path.exists(model_save_path):
+        <span class="built_in">print</span>(<span class="string">&quot;Loading saved model...&quot;</span>)
+        model.load_state_dict(torch.load(model_save_path))
+    <span class="keyword">else</span>:
+        model = train_model(model, train_loader, val_loader, criterion, optimizer, num_epochs=<span class="number">10</span>, device=device, model_save_path=model_save_path)
+
+    acc, all_preds, all_labels, all_snrs = evaluate_model(model, test_loader, device=device)
+    <span class="built_in">print</span>(<span class="string">f&#x27;Test Accuracy: <span class="subst">&#123;acc:<span class="number">.4</span>f&#125;</span>&#x27;</span>)
+
+    snr_acc = &#123;snr: [] <span class="keyword">for</span> snr <span class="keyword">in</span> snrs&#125;
+    <span class="keyword">for</span> snr, label, pred <span class="keyword">in</span> <span class="built_in">zip</span>(all_snrs, all_labels, all_preds):
+        <span class="keyword">if</span> snr <span class="keyword">in</span> snr_acc:
+            snr_acc[snr].append(label == pred)
+        <span class="keyword">else</span>:
+            <span class="built_in">print</span>(<span class="string">f&#x27;Warning: SNR <span class="subst">&#123;snr&#125;</span> not found in snr_acc dictionary.&#x27;</span>)
+
+    avg_accuracy = [np.mean(snr_acc[snr]) <span class="keyword">for</span> snr <span class="keyword">in</span> snrs]
+    plot_avg_accuracy(snrs, avg_accuracy)
+
+    mod_snr_acc = &#123;mod: &#123;snr: [] <span class="keyword">for</span> snr <span class="keyword">in</span> snrs&#125; <span class="keyword">for</span> mod <span class="keyword">in</span> mods&#125;
+    <span class="keyword">for</span> snr, label, pred <span class="keyword">in</span> <span class="built_in">zip</span>(all_snrs, all_labels, all_preds):
+        mod_snr_acc[mods[label]][snr].append(label == pred)
+
+    mod_accuracy = [[np.mean(mod_snr_acc[mod][snr]) <span class="keyword">for</span> snr <span class="keyword">in</span> snrs] <span class="keyword">for</span> mod <span class="keyword">in</span> mods]
+    plot_mod_accuracy(snrs, mod_accuracy, mods)
+
+    plot_confusion_matrix(all_labels, all_preds, mods)
+
+<span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:
+    main()
+</code></pre>
+
+<pre><code class="highlight python"><span class="keyword">import</span> os
+<span class="keyword">import</span> pickle
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> torch
+<span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn
+<span class="keyword">import</span> torch.utils.data <span class="keyword">as</span> data
+<span class="keyword">import</span> torchvision.models <span class="keyword">as</span> models
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> confusion_matrix, ConfusionMatrixDisplay
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm
+
+<span class="comment"># 数据集路径和模型保存路径</span>
+dataset_path = <span class="string">&#x27;RML2016.10a_dict.pkl&#x27;</span>
+model_save_path = <span class="string">&#x27;resnet34_model.pth&#x27;</span>
+
+<span class="comment"># 加载数据集</span>
+<span class="keyword">def</span> <span class="title function_">load_data</span>(<span class="params">dataset_path</span>):
+    <span class="keyword">with</span> <span class="built_in">open</span>(dataset_path, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:
+        Xd = pickle.load(f, encoding=<span class="string">&#x27;latin1&#x27;</span>)
+    snrs, mods = <span class="built_in">map</span>(<span class="keyword">lambda</span> j: <span class="built_in">sorted</span>(<span class="built_in">list</span>(<span class="built_in">set</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> x: x[j], Xd.keys())))), [<span class="number">1</span>, <span class="number">0</span>])
+    X = []
+    lbl = []
+    <span class="keyword">for</span> mod <span class="keyword">in</span> mods:
+        <span class="keyword">for</span> snr <span class="keyword">in</span> snrs:
+            X.append(Xd[(mod, snr)])
+            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(Xd[(mod, snr)].shape[<span class="number">0</span>]):
+                lbl.append((mod, snr))
+    X = np.vstack(X)
+    <span class="keyword">return</span> X, lbl, snrs, mods
+
+<span class="comment"># 数据集分割，仅获取测试集</span>
+<span class="keyword">def</span> <span class="title function_">split_data</span>(<span class="params">X, lbl, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span></span>):
+    _, X_test, _, lbl_test = train_test_split(X, lbl, test_size=test_size, random_state=random_state)
+    <span class="keyword">return</span> X_test, lbl_test
+
+<span class="comment"># 定义数据集类</span>
+<span class="keyword">class</span> <span class="title class_">ModulationDataset</span>(data.Dataset):
+    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, X, lbl, mods, snrs, transform=<span class="literal">None</span></span>):
+        self.X = X
+        self.lbl = lbl
+        self.mods = mods
+        self.snrs = snrs
+        self.transform = transform
+
+    <span class="keyword">def</span> <span class="title function_">__len__</span>(<span class="params">self</span>):
+        <span class="keyword">return</span> <span class="built_in">len</span>(self.lbl)
+
+    <span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, idx</span>):
+        sample = self.X[idx]
+        sample = np.expand_dims(sample, axis=<span class="number">1</span>)
+        label = self.mods.index(self.lbl[idx][<span class="number">0</span>])
+        snr = self.snrs.index(self.lbl[idx][<span class="number">1</span>])
+        <span class="keyword">if</span> self.transform:
+            sample = self.transform(sample)
+        <span class="keyword">return</span> sample, label, snr
+
+<span class="comment"># 数据加载器</span>
+<span class="keyword">def</span> <span class="title function_">get_dataloader</span>(<span class="params">X, lbl, mods, snrs, batch_size=<span class="number">128</span>, shuffle=<span class="literal">False</span></span>):
+    dataset = ModulationDataset(X, lbl, mods, snrs, transform=torch.tensor)
+    dataloader = data.DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
+    <span class="keyword">return</span> dataloader
+
+<span class="comment"># 定义ResNet34模型</span>
+<span class="keyword">class</span> <span class="title class_">ResNet34</span>(nn.Module):
+    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, num_classes=<span class="number">11</span></span>):
+        <span class="built_in">super</span>(ResNet34, self).__init__()
+        self.model = models.resnet34(pretrained=<span class="literal">True</span>)
+        self.model.conv1 = nn.Conv2d(<span class="number">2</span>, <span class="number">64</span>, kernel_size=<span class="number">7</span>, stride=<span class="number">2</span>, padding=<span class="number">3</span>, bias=<span class="literal">False</span>)
+        self.model.fc = nn.Linear(<span class="number">512</span>, num_classes)
+
+    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):
+        <span class="keyword">return</span> self.model(x)
+
+<span class="comment"># 评估模型</span>
+<span class="keyword">def</span> <span class="title function_">evaluate_model</span>(<span class="params">model, dataloader, device=<span class="string">&#x27;cuda&#x27;</span></span>):
+    model.<span class="built_in">eval</span>()
+    running_corrects = <span class="number">0</span>
+
+    all_preds = []
+    all_labels = []
+    all_snrs = []
+
+    <span class="built_in">print</span>(<span class="string">f&#x27;Evaluating on <span class="subst">&#123;device&#125;</span>&#x27;</span>)
+
+    <span class="keyword">for</span> inputs, labels, snrs <span class="keyword">in</span> tqdm(dataloader):
+        inputs = inputs.to(device).<span class="built_in">float</span>()
+        labels = labels.to(device)
+
+        <span class="keyword">with</span> torch.set_grad_enabled(<span class="literal">False</span>):
+            outputs = model(inputs)
+            _, preds = torch.<span class="built_in">max</span>(outputs, <span class="number">1</span>)
+
+        running_corrects += torch.<span class="built_in">sum</span>(preds == labels.data)
+        all_preds.extend(preds.cpu().numpy())
+        all_labels.extend(labels.cpu().numpy())
+        all_snrs.extend(snrs.numpy())
+
+    acc = running_corrects.double() / <span class="built_in">len</span>(dataloader.dataset)
+    <span class="keyword">return</span> acc, all_preds, all_labels, all_snrs
+
+<span class="comment"># 绘制不同信噪比下的平均准确率折线图</span>
+<span class="keyword">def</span> <span class="title function_">plot_avg_accuracy</span>(<span class="params">snrs, accuracies</span>):
+    plt.figure()
+    plt.plot(snrs, accuracies)
+    plt.xlabel(<span class="string">&#x27;SNR (dB)&#x27;</span>)
+    plt.ylabel(<span class="string">&#x27;Accuracy&#x27;</span>)
+    plt.title(<span class="string">&#x27;Average Accuracy vs SNR&#x27;</span>)
+    plt.grid(<span class="literal">True</span>)
+    plt.savefig(<span class="string">&#x27;avg_accuracy.png&#x27;</span>)
+    plt.show()
+
+<span class="comment"># 绘制不同信噪比下的调制方式准确率折线图</span>
+<span class="keyword">def</span> <span class="title function_">plot_mod_accuracy</span>(<span class="params">snrs, mod_accuracies, mods</span>):
+    <span class="keyword">for</span> i, mod <span class="keyword">in</span> <span class="built_in">enumerate</span>(mods):
+        plt.plot(snrs, mod_accuracies[i], label=mod)
+    plt.xlabel(<span class="string">&#x27;SNR (dB)&#x27;</span>)
+    plt.ylabel(<span class="string">&#x27;Accuracy&#x27;</span>)
+    plt.title(<span class="string">&#x27;Modulation Accuracy vs SNR&#x27;</span>)
+    plt.legend()
+    plt.grid(<span class="literal">True</span>)
+    plt.savefig(<span class="string">&#x27;mod_accuracy.png&#x27;</span>)
+    plt.show()
+
+<span class="comment"># 绘制混淆矩阵</span>
+<span class="keyword">def</span> <span class="title function_">plot_confusion_matrix</span>(<span class="params">y_true, y_pred, mods</span>):
+    cm = confusion_matrix(y_true, y_pred)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=mods)
+    fig, ax = plt.subplots(figsize=(<span class="number">10</span>, <span class="number">10</span>))  <span class="comment"># 调整图像大小</span>
+    disp.plot(cmap=plt.cm.Blues, ax=ax, xticks_rotation=<span class="string">&#x27;vertical&#x27;</span>)  <span class="comment"># 标签竖直显示</span>
+    plt.xlabel(<span class="string">&#x27;Predicted label&#x27;</span>, fontsize=<span class="number">12</span>)
+    plt.ylabel(<span class="string">&#x27;True label&#x27;</span>, fontsize=<span class="number">12</span>)
+    plt.title(<span class="string">&#x27;Confusion Matrix&#x27;</span>, fontsize=<span class="number">14</span>)
+    plt.savefig(<span class="string">&#x27;confusion_matrix.png&#x27;</span>)
+    plt.show()
+
+<span class="comment"># 主函数</span>
+<span class="keyword">def</span> <span class="title function_">main</span>():
+    device = torch.device(<span class="string">&#x27;cuda&#x27;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&#x27;cpu&#x27;</span>)
+
+    X, lbl, snrs, mods = load_data(dataset_path)
+    X_test, lbl_test = split_data(X, lbl)
+
+    test_loader = get_dataloader(X_test, lbl_test, mods, snrs, shuffle=<span class="literal">False</span>)
+
+    model = ResNet34(num_classes=<span class="built_in">len</span>(mods)).to(device)
+
+    <span class="keyword">if</span> os.path.exists(model_save_path):
+        <span class="built_in">print</span>(<span class="string">&quot;Loading saved model...&quot;</span>)
+        model.load_state_dict(torch.load(model_save_path))
+    <span class="keyword">else</span>:
+        <span class="keyword">raise</span> FileNotFoundError(<span class="string">f&#x27;Model file not found at <span class="subst">&#123;model_save_path&#125;</span>. Please train the model first.&#x27;</span>)
+
+    acc, all_preds, all_labels, all_snrs = evaluate_model(model, test_loader, device=device)
+    <span class="built_in">print</span>(<span class="string">f&#x27;Test Accuracy: <span class="subst">&#123;acc:<span class="number">.4</span>f&#125;</span>&#x27;</span>)
+
+    snr_acc = &#123;snr: [] <span class="keyword">for</span> snr <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(snrs))&#125;
+    <span class="keyword">for</span> snr, label, pred <span class="keyword">in</span> <span class="built_in">zip</span>(all_snrs, all_labels, all_preds):
+        snr_acc[snr].append(label == pred)
+
+    avg_accuracy = [np.mean(snr_acc[snr]) <span class="keyword">if</span> snr_acc[snr] <span class="keyword">else</span> <span class="number">0</span> <span class="keyword">for</span> snr <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(snrs))]
+    plot_avg_accuracy(snrs, avg_accuracy)
+
+    mod_snr_acc = &#123;mod: &#123;snr: [] <span class="keyword">for</span> snr <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(snrs))&#125; <span class="keyword">for</span> mod <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(mods))&#125;
+    <span class="keyword">for</span> snr, label, pred <span class="keyword">in</span> <span class="built_in">zip</span>(all_snrs, all_labels, all_preds):
+        mod_snr_acc[label][snr].append(label == pred)
+
+    mod_accuracy = [[np.mean(mod_snr_acc[mod][snr]) <span class="keyword">if</span> mod_snr_acc[mod][snr] <span class="keyword">else</span> <span class="number">0</span> <span class="keyword">for</span> snr <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(snrs))] <span class="keyword">for</span> mod <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(mods))]
+    plot_mod_accuracy(snrs, mod_accuracy, mods)
+
+    plot_confusion_matrix(all_labels, all_preds, mods)
+
+<span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:
+    main()
+</code></pre>
+
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">赏</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2016-2020 Yelog
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>喜欢就点赞,疼爱就打赏</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
